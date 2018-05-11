@@ -1,5 +1,7 @@
 #!/usr/bin/env python
+import os
 import flask
+import plaid
 
 
 app = flask.Flask(__name__)
@@ -13,12 +15,26 @@ access_token:
     - do not expire
 """
 
+PLAID_CLIENT_ID = os.environ['PLAID_CLIENT_ID']
+PLAID_SECRET = os.environ['PLAID_SECRET']
+PLAID_PUBLIC_KEY = os.environ['PLAID_PUBLIC_KEY']
+PLAID_ENV = 'sandbox'
+
+
+plaidClient = plaid.Client(
+    PLAID_CLIENT_ID,
+    PLAID_SECRET,
+    PLAID_PUBLIC_KEY,
+    PLAID_ENV,
+)
 
 
 @app.route('/')
 def access_token():
     # get access token using public_token
-    return
+    public_token = flask.request.json().get('public_token')
+    exchange_response = plaidClient.Item.public_token.exchange(public_token)
+    return exchange_response['access_token']
 
 
 def transactions():
@@ -27,6 +43,3 @@ def transactions():
 
 
 app.run(debug=True)
-
-
-# PLAID_CLIENT_ID=5af5e46259079700130f14bd PLAID_SECRET=427ec4f0f5c9553f3315459af25b71 PLAID_PUBLIC_KEY=cd9989bba4084b711787e940b539ea PLAID_ENV=sandbox pipenv shell python ./server.py
