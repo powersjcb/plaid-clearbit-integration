@@ -10,6 +10,9 @@ flask = "*"
 plaid-python = "*"
 requests = "*"
 ipython = "*"
+pytest = "*"
+clearbit = "*"
+flask-cors = "*"
 
 [requires]
 python_version = "3.6"
