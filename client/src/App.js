@@ -1,4 +1,5 @@
 import React from 'react';
+import { Container, Button } from 'rebass'
 import LinkAccount from './login.js'
 import TransactionList from './transaction.js'
 
@@ -6,12 +7,18 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      authenticated: true
+      authenticated: window.sessionStorage.getItem('authenticated'),
     }
   }
 
-  setAuthenticated() {
+  setAuthenticated = () => {
+    window.sessionStorage.setItem('authenticated', true)
     this.setState({authenticated: true})
+  }
+
+  logout = () => {
+    window.sessionStorage.clear()
+    this.setState({authenticated: false})
   }
 
   render() {
@@ -19,13 +26,19 @@ class App extends React.Component {
     // renders transactions
     if (this.state.authenticated) {
       return (
-        <TransactionList />
+        <div>
+          <Button onClick={this.logout}>Logout</Button>
+          <Container>
+            <TransactionList />
+          </Container>
+        </div>
+
       )
     }
     // renders login view for PlaidLink
     return (
       <LinkAccount
-        setAuthenticated={this.setAuthenticated.bind(this)}
+        setAuthenticated={this.setAuthenticated}
       />
     );
   }

@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-
+import { Flex, Divider, Box, Image, Panel, PanelFooter, PanelHeader } from 'rebass'
 
 const TransactionTitle = ({domain, name}) => {
   if (domain) {
@@ -9,30 +9,37 @@ const TransactionTitle = ({domain, name}) => {
   return <span>{name}</span>
 }
 
+const OptionalImage = ({src}) => {
+  if (!src) {
+    return null
+  }
+  return <Image width={32} src={src} />
+}
+
 class Transaction extends React.Component {
   render() {
     return (
-      <div>
-        <div>
+      <Flex>
+        <Box>
           <TransactionTitle
             name={this.props.transaction.name}
             domain={this.props.company.domain}
           />
-        </div>
-        <div>
+          <OptionalImage src={this.props.company.logo}/>
+        </Box>
+        <Box>
           {this.props.transaction.date}
-        </div>
-        <div>
-          {this.props.transaction.amount}
-        </div>
-        <div>
-          {this.props.company.location}
-        </div>
-        <div>
-          {this.props.transaction.recurring && (<span>RECURRING</span>)}
-        </div>
-        <hr/>
-      </div>
+        </Box>
+        <Box
+          ml={'auto'}
+          pr={5}
+        >
+          <div>
+            {'$' + this.props.transaction.amount.toFixed(2).toLocaleString()}
+          </div>
+          {this.props.transaction.recurring && (<div> recurring</div>)}
+        </Box>
+      </Flex>
     )
   }
 }
@@ -52,7 +59,8 @@ const fetchTransactions = (setState, transactionsCallback) => {
   }).then(
     (response) => {
     if (!response.ok) {
-      throw new Error(response.status)
+      console.log(response.status)
+      return []
     }
     return response.json()
   }).then(
@@ -106,11 +114,14 @@ class TransactionsList extends React.Component {
     return (
       <div>
         {this.state.transactions.map(t =>
-          <Transaction
-            transaction={t}
-            company={this.state.companies[t.name] || {}}
-            key={t.transaction_id}
-          />
+          <div>
+            <Transaction
+              transaction={t}
+              company={this.state.companies[t.name] || {}}
+              key={t.transaction_id}
+            />
+            <Divider />
+          </div>
         )}
       </div>
     )

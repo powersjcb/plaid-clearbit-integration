@@ -26,7 +26,6 @@ plaidClient = plaid.Client(
 
 
 def access_token():
-    flask.current_app.logger.debug(flask.session)
     token = flask.session.get('plaid_access_token')
     if not token:
         flask.abort(401)
