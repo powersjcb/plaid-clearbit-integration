@@ -8,7 +8,7 @@
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-plaid-link": "^1.0.2",
-    "react-scripts": "1.1.4",
+    "react-scripts": "5.0.1",
     "rebass": "^1.0.7"
   },
   "scripts": {
